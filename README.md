@@ -1,160 +1,172 @@
-# Ecommerce_webapp (NexusMarket) — Local Setup & Run (Windows CMD)
+# NexusMarket — E-commerce Web Application
 
-Project root: %USERPROFILE%\Desktop\Ecommerce_webapp
-Frontend: %USERPROFILE%\Desktop\Ecommerce_webapp\frontend (React + CRACO)
-Backend: %USERPROFILE%\Desktop\Ecommerce_webapp\backend (FastAPI + Uvicorn)
-Database: MongoDB (runs separately, default: mongodb://127.0.0.1:27017)
+An ecommerce webapp built with React (CRACO), FastAPI, and MongoDB, featuring product management, authentication, cart/checkout, seller dashboard, and admin panel.
 
-============================================================ 0) One-time prerequisites (install once)
-============================================================
+## Tech Stack
 
-# Check Node & npm
+Frontend:
 
-node -v
-npm -v
+- React + Create React App (CRACO)
+- Tailwind CSS + Radix UI
+- React Router, Axios, React Hook Form, Zod
 
-# Enable Yarn using Corepack (recommended; your project expects Yarn 1.22.22)
+Backend:
 
-corepack enable
-yarn -v
+- FastAPI (Python) + Uvicorn
+- MongoDB (Motor async driver)
+- JWT auth (+ OAuth support)
 
-# MongoDB
+## Features
 
-# - Install MongoDB Community Server (GUI installer)
+- User authentication (email/password + OAuth)
+- Product browsing (categories + search)
+- Shopping cart + wishlist
+- Checkout + order history
+- Seller dashboard
+- Admin panel
 
-# - Install mongosh (Shell)
+---
 
-# Verify mongo shell can connect:
+## Local Setup (Windows CMD)
+
+### Folder structure
+
+This README assumes the project is located at:
+
+- %USERPROFILE%\Desktop\ecommerce_webapp
+
+And contains:
+
+- backend\
+- frontend\
+
+If yours is different, adjust the `cd` commands.
+
+### Prerequisites (install once)
+
+- Node.js (includes npm)
+- Python 3.x
+- MongoDB Community Server + mongosh
+
+### Do NOT commit these (recommended .gitignore)
+
+Create a file named `.gitignore` in the project root and add:
+
+node*modules/
+build/
+venv/
+.venv/
+**pycache**/
+*.py[cod]
+.env
+.env.\_
+_.pem
+_.key
+.vscode/
+.DS_Store
+Thumbs.db
+
+---
+
+## Environment Variables
+
+Create these files locally (do not commit them):
+
+### frontend\.env
+
+REACT_APP_BACKEND_URL=http://127.0.0.1:8000
+WDS_SOCKET_PORT=0
+
+### backend\.env (example)
+
+MONGO_URL="mongodb://localhost:27017"
+DB_NAME="test_database"
+CORS_ORIGINS="http://localhost:3000"
+JWT_SECRET_KEY=change_me
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+---
+
+## Run the project (daily)
+
+### 1) Start MongoDB (service)
+
+Open CMD and run:
+
+sc query MongoDB
+net start MongoDB
+
+(Optional) test DB connection:
 
 mongosh
 
-============================================================
+### 2) Start Backend (Terminal 1)
 
-1. # One-time project setup (run once per fresh download/clone)
+Open a new CMD and run:
 
----
+cd %USERPROFILE%\Desktop\ecommerce_webapp\backend
 
-## A) Backend: install deps
-
-cd %USERPROFILE%\Desktop\Ecommerce_webapp\backend
-
-# Create & activate virtual environment
-
+REM Create venv once (safe to re-run; it will just say it exists)
 python -m venv venv
+
+REM Activate venv (must do this each new terminal)
 venv\Scripts\activate
 
-# Install Python dependencies
-
+REM Install deps (run again only when requirements.txt changes)
 pip install -r requirements.txt
 
-# (Optional) If you have a backend/.env file, make sure it has correct local values, e.g.
-
-# MONGO_URL="mongodb://localhost:27017"
-
-# DB_NAME="test_database"
-
-# CORS_ORIGINS="http://localhost:3000"
-
----
-
-## B) Frontend: install deps
-
-cd %USERPROFILE%\Desktop\Ecommerce_webapp\frontend
-
-# If yarn install times out on slow networks:
-
-yarn config set network-timeout 600000 -g
-
-# Install node dependencies
-
-yarn install --network-timeout 600000
-
-# (Optional) frontend/.env should point to local backend:
-
-# REACT_APP_BACKEND_URL=http://127.0.0.1:8000
-
-# WDS_SOCKET_PORT=0
-
-============================================================ 2) Daily run commands (every time you start working)
-============================================================
-
----
-
-## A) Start MongoDB (usually automatic)
-
-# Check MongoDB Windows Service:
-
-sc query MongoDB
-
-# If NOT running, start it:
-
-net start MongoDB
-
----
-
-## B) Start Backend (Terminal 1)
-
-cd %USERPROFILE%\Desktop\Ecommerce_webapp\backend
-venv\Scripts\activate
-
-# Start FastAPI backend (dev mode with auto-reload)
-
+REM Start FastAPI (dev mode)
 uvicorn server:app --reload --port 8000
 
-# Backend docs (Swagger UI):
+Backend API docs:
 
-# http://127.0.0.1:8000/docs
+- http://127.0.0.1:8000/docs
 
-# If you see GET / 404 or GET /favicon.ico 404 in logs, it’s normal.
+Note: If you see logs like GET / 404 or GET /favicon.ico 404, that’s usually harmless.
+
+### 3) Start Frontend (Terminal 2)
+
+Open a new CMD and run:
+
+cd %USERPROFILE%\Desktop\ecommerce_webapp\frontend
+
+REM Enable yarn via corepack (first time only)
+corepack enable
+
+REM Install deps (run again only when package.json changes)
+yarn install
+
+REM Start React dev server
+yarn start
+
+Frontend URL:
+
+- http://localhost:3000
 
 ---
 
-## C) Start Frontend (Terminal 2)
+## Stop servers
 
-cd %USERPROFILE%\Desktop\Ecommerce_webapp\frontend
+In the terminal windows where frontend/backend are running, press:
 
-# Start React dev server
+Ctrl + C
 
-yarn start
+---
 
-# Frontend URL:
+## Common fixes
 
-# http://localhost:3000
-
-============================================================ 3) Stop servers
-============================================================
-
-# Frontend terminal: press Ctrl + C
-
-# Backend terminal: press Ctrl + C
-
-============================================================ 4) Common fixes
-============================================================
-
-# If yarn install shows ESOCKETTIMEDOUT:
+### Yarn install timeout (slow network)
 
 yarn config set network-timeout 600000 -g
 yarn install --network-timeout 600000
 
-# If you changed frontend .env values:
+### Change ports
 
-# Stop & restart frontend (Ctrl+C then yarn start) so CRA reloads env vars.
+If backend port 8000 is busy:
+uvicorn server:app --reload --port 8001
 
-# If backend port 8000 is busy, use another port:
+Then update `frontend\.env`:
+REACT_APP_BACKEND_URL=http://127.0.0.1:8001
 
-# uvicorn server:app --reload --port 8001
-
-# then update frontend/.env REACT_APP_BACKEND_URL accordingly.
-
-============================================================
-Notes
-============================================================
-
-- /docs is the BACKEND API docs (FastAPI Swagger UI), not the database.
-- MongoDB is the database server at mongodb://127.0.0.1:27017.
-- Keep backend + frontend running in two terminals while developing.
-
-Refs:
-
-- CRA dev server is typically started with npm/yarn start. https://create-react-app.dev/docs/getting-started/ [web:247]
-- Uvicorn runs FastAPI with: uvicorn module:app --reload --port 8000. https://fastapi.tiangolo.com/deployment/manually/ [web:306]
+---
