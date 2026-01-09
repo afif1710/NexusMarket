@@ -1,0 +1,136 @@
+/* App-specific styles */
+
+/* Product card image zoom */
+.product-image-zoom {
+    transition: transform 0.7s ease;
+}
+
+.product-image-zoom:hover {
+    transform: scale(1.05);
+}
+
+/* Button animations */
+.btn-primary {
+    @apply rounded-full bg-primary text-primary-foreground px-8 py-3 text-base font-semibold;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Form input focus effects */
+.input-focus-effect:focus {
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
+}
+
+/* Cart badge animation */
+@keyframes cart-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.cart-badge-animate {
+    animation: cart-bounce 0.3s ease;
+}
+
+/* Loading skeleton shimmer */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        hsl(var(--muted)) 0%,
+        hsl(var(--muted-foreground) / 0.1) 50%,
+        hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Rating stars */
+.star-filled {
+    color: #fbbf24;
+}
+
+.star-empty {
+    color: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* Mobile navigation */
+@media (max-width: 768px) {
+    .mobile-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+    }
+}
+
+/* Price display */
+.price-original {
+    @apply line-through text-muted-foreground text-sm;
+}
+
+.price-sale {
+    @apply text-destructive font-bold;
+}
+
+/* Category card hover */
+.category-card {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.category-card:hover {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+}
+
+/* Toast notifications positioning */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+}
+
+/* Hero section */
+.hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+}
+
+/* Dark mode specific adjustments */
+.dark .hero-gradient {
+    background: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 47% 15%) 100%);
+}
+
+/* Quantity selector */
+.quantity-btn {
+    @apply w-8 h-8 flex items-center justify-center rounded-md border border-border;
+    transition: background-color 0.2s ease;
+}
+
+.quantity-btn:hover {
+    @apply bg-muted;
+}
+
+/* Order status badges */
+.status-pending { @apply bg-yellow-100 text-yellow-800; }
+.status-processing { @apply bg-blue-100 text-blue-800; }
+.status-shipped { @apply bg-purple-100 text-purple-800; }
+.status-delivered { @apply bg-green-100 text-green-800; }
+.status-cancelled { @apply bg-red-100 text-red-800; }
+
+.dark .status-pending { @apply bg-yellow-900/30 text-yellow-400; }
+.dark .status-processing { @apply bg-blue-900/30 text-blue-400; }
+.dark .status-shipped { @apply bg-purple-900/30 text-purple-400; }
+.dark .status-delivered { @apply bg-green-900/30 text-green-400; }
+.dark .status-cancelled { @apply bg-red-900/30 text-red-400; }
